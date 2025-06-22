@@ -1,15 +1,20 @@
 # 기계학습원론_SWE3050_43 과제
-이전에 작성해둔 코드(https://github.com/simta1/cpp_tui_tetris)를 수정해 만들었기 때문에 본 과제에선 필요없는 기능들이 일부 구현되어 있습니다..   
-windows API를 사용해서 다른 OS에선 실행할수가 없습니다   
+조교님께..
+
+이전에 작성해둔 코드( https://github.com/simta1/cpp_tui_tetris )를 기반으로 구현해서 이번 과제와 관련없는 일부 기능들이 포함되어 있습니다.   
+모델 구현 코드는 `src/agent.h`에 있으니 채점 시 참고 부탁드립니다.
+
+### 실행 방법
+windows API를 사용하므로 다른 OS에선 실행할 수 없습니다   
 컴파일은 `g++ src/main.cpp -O2 -std=c++17 -o main.exe`사용하시면 됩니다.(`bits/stdc++.h`헤더가 필요합니다)   
 직접 게임하는 경우 `main.exe --player`,   
 에이전트를 사용하는 경우 `main.exe --agent`로 실행하시면 됩니다.   
-따로 cmd창 켜서 실행해야 화면이 예쁘게 나옵니다..   
+따로 cmd창 켜서 실행해야 화면이 예쁘게 나옵니다.   
 이전 데이터 삭제하고 싶을 경우 직접 data.txt삭제해야 됩니다   
-(저사양) 노트북에서 실행할 경우 충전기 꽂은 상태로 실행해야 속도저하가 없습니다..   
+노트북에서 실행할 경우 충전기 꽂은 상태로 실행해야 속도저하가 없습니다..   
 
 ## 조작법
-src/userControlKey.h 에서 원하는 키로 수정 가능
+src/userControlKey.h 에서 원하는 키로 수정 가능합니다   
 
 | 기능                | 키               |
 |---------------------|-------------------|
@@ -24,9 +29,5 @@ src/userControlKey.h 에서 원하는 키로 수정 가능
 | 홀드                 | `Space`          |
 | 디자인 테마 변경     | `t`              |
 
-## 게임화면
-### 플레이영상
+## 게임 플레이 영상
 ![tetris_play](https://github.com/user-attachments/assets/0aa21463-dfb8-42bb-93ab-4887a0f3118f)
-
-### 에이전트 사용영상
-<!-- TODO -->
