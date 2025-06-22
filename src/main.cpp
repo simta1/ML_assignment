@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
 }
 
 void runWithPlayer() {
-    Game<20, 10> game;
+    Game<20, 10> game("data.txt");
     game.start();
 
     while (1) {

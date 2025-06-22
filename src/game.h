@@ -92,6 +92,10 @@ private:
 
     bool paused;
     bool gameover;
+    
+    // 게임 로그 기록
+    ofstream fout;
+    int ccwRotateCnt; // 반시계 방향 회전수 기록
 
     // printer // 콘솔창 출력 담당
     mutable LazyPrinter lazyPrinter;
@@ -164,6 +168,8 @@ private:
 
             if (canRotate) {
                 fallingBlock.wallKick(dx, dy);
+                if (direction == RotateDirection::COUNTERCLOCKWISE) ++ccwRotateCnt;
+                else --ccwRotateCnt;
                 return true;
             }
         }
@@ -236,6 +242,12 @@ private:
     }
 
     int putFallingBlock() { // 테트로미노 보드에 고정 후 꽉 찬 줄 개수 리턴
+        if (fout.is_open()) {
+            fout << getCurrentState() << "\n";
+            fout.flush();
+            ccwRotateCnt = 0;
+        }
+
         int kind = fallingBlock.getKind();
         for (auto [x, y] : fallingBlock.getCoordinates()) board[y][x] = kind;
         fallingBlock.put();
@@ -482,7 +494,7 @@ private:
     }
 
 public:
-    Game() : \
+    Game(const string &path = "") : \
         board(ROWS, vector<int>(COLS)), lazyPrinter((MARGIN_WIDTH + 2 * BOARD_BORDER_THICKNESS + COLS + MARGIN_WIDTH) * LEN, 2 * BREAKROW_VIBRATION_LEN, (MARGIN_HEIGHT + 2 * BOARD_BORDER_THICKNESS + ROWS) * LEN, 1), \
         timer_drop(dropTime / sleepDuration, true), \
         timer_hardDropped(hardDropAnimationDuration / sleepDuration, false), \
@@ -505,6 +517,13 @@ public:
                 borderPos.push_back({COLS + 2 * BOARD_BORDER_THICKNESS - 1 - x, y});
             }
         }
+        
+        if (!path.empty()) fout.open(path, ios::app);
+        ccwRotateCnt = 0;
+    }
+    
+    ~Game() {
+        if (fout.is_open()) fout.close();
     }
 
     void start() {
@@ -598,8 +617,22 @@ public:
         lazyPrinter.changeThema();
     }
     
+    int getHeightOfColumn(int col) {
+        for (int i = 0; i < ROWS; i++) if (board[i][col]) return ROWS - i;
+        return 0;
+    }
+
     string getCurrentState() {
-        return ""; // TODO
+        int firstCol = getHeightOfColumn(0);
+
+        string res = "";
+        for (int col = 1; col < COLS; col++) res += to_string(getHeightOfColumn(col) - firstCol) + " "; // 9개 열의 상대높이
+
+        res += to_string(fallingBlock.getKind()) + " "; // 테트로미노 종류
+        res += to_string(fallingBlock.getX()) + " "; // 테트로미노 하드드랍 열 위치
+        res += to_string(ccwRotateCnt) + " "; // 테트로미노 반시계방향 회전횟수
+
+        return res;
     }
 };
 
