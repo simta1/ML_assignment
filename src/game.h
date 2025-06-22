@@ -597,6 +597,10 @@ public:
     void changeThema() {
         lazyPrinter.changeThema();
     }
+    
+    string getCurrentState() {
+        return ""; // TODO
+    }
 };
 
 #endif

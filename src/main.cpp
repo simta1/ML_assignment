@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <conio.h> // _kbhit, _getch
 #include "game.h"
+#include "agent.h"
 #include "userControlKey.h"
 
 void consoleInit() {
@@ -9,20 +10,41 @@ void consoleInit() {
 
     // cursor
     CONSOLE_CURSOR_INFO cursorInfo = { 0, };
-    cursorInfo.dwSize = 1; // 커서 굵기 (1 ~ 100)
-    cursorInfo.bVisible = FALSE; // 커서 Visible 여부 (TRUE, FALSE)
+    cursorInfo.dwSize = 1;
+    cursorInfo.bVisible = FALSE;
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 }
 
-int main() {
+void runWithPlayer();
+void runWithAgent();
+
+int main(int argc, char* argv[]) {
+    SetConsoleOutputCP(CP_UTF8);
+	if (argc < 2) {
+        cerr << "Usage: main.exe [--player | --agent]\n";
+		return 1;
+	}
+
     consoleInit();
 
+	string mode = argv[1];
+    if (mode == "--player") runWithPlayer();
+    else if (mode == "--agent") runWithAgent();
+    else {
+        cerr << "Usage: main.exe [--player | --agent]\n";
+		return 1;
+	}
+
+    return 0;
+}
+
+void runWithPlayer() {
     Game<20, 10> game;
     game.start();
 
     while (1) {
         if (_kbhit()) {
-            char key = _getch(); // input
+            char key = _getch();
 
             if (key == KEY_PAUSE_GAME) game.pause();
             else if (key == KEY_REPLAY_GAME) game.replay();
@@ -38,6 +60,19 @@ int main() {
 
         game.run();
     }
+}
 
-    return 0;
+void runWithAgent() {
+    Game<20, 10> game;
+    game.start();
+    
+    Agent agent("data.txt");
+    
+    while (1) {
+        auto state = game.getCurrentState();
+		Move move = agent.predict(state);
+		game.applyMove(move);
+		game.run();
+        Sleep(10);
+    }
 }
