@@ -66,11 +66,14 @@ void runWithAgent() {
     Game<20, 10> game;
     game.start();
     
-    Agent agent("data.txt");
+    string dataPath = "data.txt";
+    // string dataPath = "model_junho.txt";
+    // string dataPath = "model_always_left.txt"; // 항상 왼쪽 벽 끝에 테트로미노 둠
+
+    Agent agent(dataPath);
     
     while (1) {
-        auto state = game.getCurrentState();
-		Move move = agent.predict(state);
+		Move move = agent.predict(game);
 		game.applyMove(move);
 		game.run();
         Sleep(10);

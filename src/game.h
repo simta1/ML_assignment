@@ -617,12 +617,12 @@ public:
         lazyPrinter.changeThema();
     }
     
-    int getHeightOfColumn(int col) {
+    int getHeightOfColumn(int col) const {
         for (int i = 0; i < ROWS; i++) if (board[i][col]) return ROWS - i;
         return 0;
     }
 
-    string getCurrentState() {
+    string getCurrentState() const {
         int firstCol = getHeightOfColumn(0);
 
         string res = "";
@@ -633,6 +633,14 @@ public:
         res += to_string(ccwRotateCnt) + " "; // 테트로미노 반시계방향 회전횟수
 
         return res;
+    }
+    
+    int getFallingBlockPosX() const {
+        return fallingBlock.getX();
+    }
+
+    int getCcwRotateCnt() const {
+        return ccwRotateCnt;
     }
 };
 
